@@ -5,6 +5,7 @@ import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -34,7 +35,7 @@ public class EntityLifeCycleTests {
         );
 
         Assertions.assertNotEquals(foundMenu, newMenu);
-        Assertions.assertFalse(lifeCycle.getManagerInstance().contains(newMenu));
+        Assertions.assertTrue(lifeCycle.getManagerInstance().contains(foundMenu));
 
     }
 
@@ -84,7 +85,7 @@ public class EntityLifeCycleTests {
 
         manager.flush();
 
-        Assertions.assertEquals(menuPrice, manager.find(Menu.class, menuCode).getMenuPrice());
+        Assertions.assertNotEquals(menuPrice, manager.find(Menu.class, menuCode).getMenuPrice());
         transaction.rollback();
 
     }
@@ -118,6 +119,91 @@ public class EntityLifeCycleTests {
         Assertions.assertEquals(menuPrice, manager.find(Menu.class, menuCode).getMenuPrice());
         transaction.rollback();
 
+    }
+
+    @DisplayName("detach 준영속 후 merge 한 데이터 save 테스트")
+    @Test
+    void testDetachAndMergeSave() {
+
+        EntityManager manager = EntityManagerGenerator.getManagerInstance();
+        EntityTransaction transaction = manager.getTransaction();
+        Menu foundMenu = manager.find(Menu.class, 20);
+
+        manager.detach(foundMenu);
+
+        transaction.begin();
+        foundMenu.setMenuCode(999);
+        foundMenu.setMenuName("닭가슴살샐러드");
+
+        manager.merge(foundMenu);
+        manager.flush();
+
+        Assertions.assertEquals("닭가슴살샐러드", manager.find(Menu.class, 999).getMenuName());
+    }
+
+    @DisplayName("준영속화 clear 테스트")
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3})
+    void testClearPersistenceContext(int menuCode) {
+
+        EntityManager manager = EntityManagerGenerator.getManagerInstance();
+        Menu foundMenu = manager.find(Menu.class, menuCode);
+
+        // clear() : 영속성 컨텍스트를 초기화 -> 영속성 컨텍스트 내의 모든 엔티티를 준영속화 시킨다.
+        manager.clear();
+
+        Menu expectedMenu = manager.find(Menu.class, menuCode);
+        Assertions.assertNotEquals(expectedMenu, foundMenu);
+    }
+
+    @DisplayName("준영속화 close 테스트")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3})
+    void closePersistenceContext(int menuCode) {
+
+        EntityManager manager = EntityManagerGenerator.getManagerInstance();
+
+        Menu foundMenu = manager.find(Menu.class, menuCode);
+
+        // close() : 영속성 컨텍스트를 종료한다 -> 영속성 컨텍스트 내 모든 객체를 준영속화 시킨다.
+        manager.close();
+
+//        Menu expectedMenu = manager.find(Menu.class, menuCode);
+//        Assertions.assertNotEquals(expectedMenu, foundMenu);
+        Assertions.assertThrows(
+                IllegalStateException.class,
+                () -> manager.find(Menu.class, menuCode)
+        );
+
+    }
+
+    @DisplayName("영속성 엔티티 삭제 remove 테스트")
+    @ParameterizedTest
+    @ValueSource(ints = {1})
+    void testRemoveEntity(int menuCode) {
+
+        EntityManager manager = EntityManagerGenerator.getManagerInstance();
+        EntityTransaction transaction = manager.getTransaction();
+
+        Menu foundMenu = manager.find(Menu.class, menuCode);
+
+        transaction.begin();
+
+        /* 필기.
+        *   remove()
+        *   엔티티를 영속성 컨텍스트 및 데이터베이스에서 삭제한다.
+        *   단, 트랜젝션을 제어하지 않으면 데이터베이스에 영구 반영되지는 않는다.
+        *   트랜젝션을 커밋 or 플러쉬 하는 순간 영속성 컨텍스트에서
+        *   관리하는 엔티티 객체가 데이터 베이스에 반영된다.
+        * */
+
+        manager.remove(foundMenu);
+
+        manager.flush();
+
+//        Assertions.assertFalse(manager.contains(foundMenu));
+        Menu refoundMenu = manager.find(Menu.class, menuCode);
+        Assertions.assertEquals(null, refoundMenu);
     }
 
 }
