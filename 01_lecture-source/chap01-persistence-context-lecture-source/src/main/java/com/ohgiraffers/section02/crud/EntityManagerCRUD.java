@@ -29,6 +29,8 @@ public class EntityManagerCRUD {
 
         manager.persist(newMenu);
         manager.flush();
+
+//        transaction.commit();
         
         return getCount(manager);
 
@@ -53,6 +55,21 @@ public class EntityManagerCRUD {
         manager.flush();
 
         return foundMenu;
+
+    }
+
+    public Long removeAndReturnAllCount(int menuCode) {
+
+        Menu foundMenu = findMenuByMenuCode(menuCode);
+
+        EntityTransaction transaction = manager.getTransaction();
+
+        transaction.begin();
+
+        manager.remove(foundMenu);
+        manager.flush();
+
+        return getCount(manager);
 
     }
 }

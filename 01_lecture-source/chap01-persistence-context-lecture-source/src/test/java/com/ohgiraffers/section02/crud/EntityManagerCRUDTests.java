@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
@@ -70,7 +71,7 @@ public class EntityManagerCRUDTests {
         Long count = crud.saveAndReturnAllCount(newMenu);
 
         //then
-        Assertions.assertEquals(22, count);
+        Assertions.assertEquals(26, count);
 
     }
 
@@ -84,6 +85,17 @@ public class EntityManagerCRUDTests {
 
         //then
         Assertions.assertEquals(menuName, modifyMenu.getMenuName());
+
+    }
+
+    @DisplayName("메뉴 삭제 테스트")
+    @ParameterizedTest
+    @ValueSource(ints = {1})
+    void testRemoveMenu(int menuCode) {
+
+        Long count = crud.removeAndReturnAllCount(menuCode);
+
+        Assertions.assertEquals(24, count);
 
     }
 
