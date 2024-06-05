@@ -1,0 +1,48 @@
+package com.ohgiraffers.section02.crud;
+
+import jakarta.persistence.EntityTransaction;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+public class EntityManagerCRUDTests {
+
+    private EntityManagerCRUD crud;
+
+    @BeforeEach
+    void initManager() {
+        this.crud = new EntityManagerCRUD();
+    }
+
+    @AfterEach
+    void rollback() {
+
+        EntityTransaction transaction = crud.getManagerInstance().getTransaction();
+        transaction.rollback();
+    }
+
+    @DisplayName("메뉴 코드로 메뉴 조회 테스트")
+    /* 필기.
+    *   테스트 시에 여러 값들을 이용해서 검증을 진행해야 하는 경우에 경우의 수 만큼 테스트 메소드를
+    *   작성해야 한다.
+    *   @ParameterizedTest 어노테이션을 붙이게 되면 테스트 메소드에 매개변수를 선언할 수 있다.
+    *   (일반적인 테스트 메소드는 매개변수 사용 불가)
+    *   파라미터로 전달할 값의 목록 만큼 반복적으로 테스트 메소드를 실행하며 준비 된 값 목록을 전달하여
+    *   테스트를 실행할 수 있다. --> given 을 대체할 수 있다.
+    *  */
+    @ParameterizedTest
+    /* 필기. 여러 개의 테스트 전용 파라미터 전달. 쉼표(,) 로 값을 구분할 수 있다. */
+    @CsvSource({"1,1","2,2","3,3"})
+    void testFindMethodByMenuCode(int menuCode, int expected) {
+
+        //when
+        Menu foundMenu = crud.findMenuByMenuCode(menuCode);
+
+        //then
+        Assertions.assertEquals(expected, foundMenu.getMenuCode());
+    }
+
+}
