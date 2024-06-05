@@ -19,4 +19,40 @@ public class EntityManagerCRUD {
         return manager.find(Menu.class, menuCode);
 
     }
+
+    public Long saveAndReturnAllCount(Menu newMenu) {
+
+        manager = EntityManagerGenerator.getManagerInstance();
+
+        EntityTransaction transaction = manager.getTransaction();
+        transaction.begin();
+
+        manager.persist(newMenu);
+        manager.flush();
+        
+        return getCount(manager);
+
+    }
+
+    private Long getCount(EntityManager manager) {
+
+        return manager.createQuery("SELECT COUNT(*) FROM section02Menu", Long.class).getSingleResult();
+
+    }
+
+    public Menu modifyMenuName(int menuCode, String menuName) {
+
+        Menu foundMenu = findMenuByMenuCode(menuCode);
+
+        EntityTransaction transaction = manager.getTransaction();
+
+        transaction.begin();
+
+        foundMenu.setMenuName(menuName);
+
+        manager.flush();
+
+        return foundMenu;
+
+    }
 }

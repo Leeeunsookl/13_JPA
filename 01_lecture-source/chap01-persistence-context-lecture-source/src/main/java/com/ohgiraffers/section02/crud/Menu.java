@@ -31,8 +31,7 @@ public class Menu {
     // 같은 패키지 내에 있는 녀석들만 사용 가능 할 수 있다.
     protected Menu() {}
 
-    public Menu(int menuCode, String menuName, int menuPrice, int categoryCode, String orderableStatus) {
-        this.menuCode = menuCode;
+    public Menu(String menuName, int menuPrice, int categoryCode, String orderableStatus) {
         this.menuName = menuName;
         this.menuPrice = menuPrice;
         this.categoryCode = categoryCode;
@@ -42,5 +41,14 @@ public class Menu {
     public int getMenuCode() {
 
         return this.menuCode;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
+
+    public String getMenuName() {
+
+        return menuName;
     }
 }
