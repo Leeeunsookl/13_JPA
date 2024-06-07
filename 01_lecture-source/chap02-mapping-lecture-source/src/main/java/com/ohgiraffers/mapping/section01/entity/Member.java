@@ -47,4 +47,29 @@ public class Member {
     @Column(name = "enroll_date")
     private LocalDateTime enrollDate;
 
+    /* 필기.
+    *   @Enumerated
+    *   - enum 타입을 매핑하기 위해서 사용한다.
+    *   - ORDINAL : Enum 타입을 순서로 매핑 - 장점 : 데이터베이스에 저장되는 데이터의 크기가 작음
+    *   - STRING :  Enum 타입을 문자열로 매핑
+    *  */
+    @Column(name = "member_role")
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole;
+
+    @Column(name = "status" , columnDefinition = "char(1) default 'Y'")
+    private String status;
+
+    protected Member() {}
+
+    public Member( String memberId, String memberPwd, String memberName, String phone, String address, LocalDateTime enrollDate, MemberRole memberRole, String status) {
+        this.memberId = memberId;
+        this.memberPwd = memberPwd;
+        this.memberName = memberName;
+        this.phone = phone;
+        this.address = address;
+        this.enrollDate = enrollDate;
+        this.memberRole = memberRole;
+        this.status = status;
+    }
 }
