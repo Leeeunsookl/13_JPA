@@ -1,7 +1,9 @@
 package com.ohgiraffers.mapping.section02.embedded;
 
+import jakarta.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookRegistService {
@@ -9,6 +11,7 @@ public class BookRegistService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Transactional
     public void registBook(BookRegistDTO newBook) {
 
         Book book = new Book(
@@ -22,5 +25,6 @@ public class BookRegistService {
                 )
         );
 
+        bookRepository.save(book);
     }
 }

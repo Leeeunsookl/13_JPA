@@ -19,5 +19,33 @@ public class Price {
     protected Price() {}
 
 
+    public Price(int regularPrice, double discountRate) {
+        validateNagativePrice(regularPrice);
+        validateNagativeDiscountRate(discountRate);
+        this.regularPrice = regularPrice;
+        this.discountRate = discountRate;
+        this.sellPrice = calcSellPrice(regularPrice, discountRate);
+    }
 
+    private int calcSellPrice(int regularPrice, double discountRate) {
+
+        return (int) (regularPrice - (regularPrice * discountRate));
+
+    }
+
+    private void validateNagativeDiscountRate(double discountRate) {
+
+        if(regularPrice < 0) {
+            throw new IllegalArgumentException("가격은 음수일 수 없습니다.");
+        }
+
+    }
+
+    private void validateNagativePrice(int regularPrice) {
+
+        if(discountRate < 0) {
+            throw new IllegalArgumentException("할인율은 음수일 수 없습니다.");
+        }
+
+    }
 }
