@@ -46,7 +46,7 @@ public class BiDirectionTests {
 
         //then
         Assertions.assertEquals(menuCode, foundMenu.getMenuCode());
-        System.out.println("foundMenu = " + foundMenu);
+//        System.out.println("foundMenu = " + foundMenu);
     }
 
     @DisplayName("양방향 연관관계 매핑 조회 테스트2 (연관관계의 주인이 아닌 객체)")
@@ -62,13 +62,13 @@ public class BiDirectionTests {
 
         //then
         Assertions.assertEquals(categoryCode, foundCategory.getCategoryCode());
-        System.out.println("[category menuList] : "+ foundCategory.getMenuList());
+//        System.out.println("[category menuList] : "+ foundCategory.getMenuList());
     }
 
 
     private static Stream<Arguments> getMenuInfo(){
         return Stream.of(
-                Arguments.of(111,"스테이크",9800,"Y")
+                Arguments.of(333,"스테이크",9800,"Y")
         );
     }
 
@@ -89,7 +89,7 @@ public class BiDirectionTests {
 
     private static Stream<Arguments> getCategoryInfo(){
         return Stream.of(
-                Arguments.of(111,"양방향 카테고리",null)
+                Arguments.of(333,"양방향 카테고리",null)
         );
 
     }

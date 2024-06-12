@@ -1,6 +1,6 @@
 package com.ohgiraffers.associationmapping.section03.bidirection;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +24,7 @@ public class BidirectionService {
 
         Category foundCategory = bidirectionRepository.findCategory(categoryCode);
 
-        System.out.println("[category menuList]" + foundCategory.getMenuList());
+        System.out.println("[category menuList] : " + foundCategory.getMenuList());
 
         return foundCategory;
     }

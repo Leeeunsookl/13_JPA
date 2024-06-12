@@ -27,7 +27,7 @@ public class ParameterBindingRepository {
 
         String jpql = "SELECT m FROM section02Menu m WHERE m.menuName = ?1";
         List<Menu> resultMenuList = manager.createQuery(jpql, Menu.class)
-                                    .setParameter("1",menuName)
+                                    .setParameter(1,menuName)
                                     .getResultList();
 
         return resultMenuList;

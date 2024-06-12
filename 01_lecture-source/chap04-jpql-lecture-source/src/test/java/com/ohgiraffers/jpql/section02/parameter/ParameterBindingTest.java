@@ -24,7 +24,7 @@ public class ParameterBindingTest {
 
     @DisplayName("이름을 기준으로 파라미터 바인딩 메뉴 목록 조회 테스트")
     @Test
-    void testparameterByName(){
+    void testParameterByName(){
 
         //given
         String menuName= "한우딸기국밥";
@@ -38,7 +38,7 @@ public class ParameterBindingTest {
 
     @DisplayName("위치 기준으로 파라미터 바인딩 메뉴 목록 조회 테스트")
     @Test
-    void testparameterByPosition(){
+    void testParameterByPosition(){
 
         //given
         String menuName= "한우딸기국밥";
