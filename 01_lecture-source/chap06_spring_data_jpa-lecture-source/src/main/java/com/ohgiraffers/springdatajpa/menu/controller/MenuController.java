@@ -61,7 +61,7 @@ public class MenuController {
         log.info("첫 페이지 여부: {}", menuList.isFirst());
         log.info("마지막 페이지 여부: {}", menuList.isLast());
         log.info("정렬 방식 : {}", menuList.getSort());
-        log.info("여러 페이지 중 현대 인덱스 : {}",menuList.getNumber());
+        log.info("여러 페이지 중 현재 인덱스 : {}",menuList.getNumber());
 
         PagingButton paging = Pagenation.getPagingButtonInfo(menuList);
 
