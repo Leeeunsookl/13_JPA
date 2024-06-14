@@ -5,7 +5,6 @@ import com.ohgiraffers.springdatajpa.common.PagingButton;
 import com.ohgiraffers.springdatajpa.menu.model.dto.CategoryDTO;
 import com.ohgiraffers.springdatajpa.menu.model.dto.MenuDTO;
 import com.ohgiraffers.springdatajpa.menu.model.service.MenuService;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,38 +28,40 @@ public class MenuController {
         this.service = service;
     }
 
-    @GetMapping("/{menuCode}")
-    public String findMenuByCode(@PathVariable int menuCode, Model model) {
+    @GetMapping("/{menuCode}") //메뉴코드 넣었던 거
+    public String findMenuByMenuCode(@PathVariable int menuCode, Model model) {
 
-        MenuDTO resultMenu = service.findMenuByMenuCode(menuCode);
+       MenuDTO resultMenu = service.findMenuByMenuCode(menuCode);
 
-        model.addAttribute("menu", resultMenu);
+       model.addAttribute("menu", resultMenu);
 
-        return "menu/detail";
+       return "menu/detail";
     }
 
     @GetMapping("/list")
     public String findMenuList(Model model, @PageableDefault Pageable pageable) {
 
-        /* no paging 버전 */
+        /* no paging 버젼 */
 //        List<MenuDTO> menuList = service.findMenuList();
 //
 //        model.addAttribute("menuList", menuList);
 
-        /* paging 버전 */
+        /* paging 버젼 */
         log.info("pageable : {}", pageable);
+
 
         Page<MenuDTO> menuList = service.findMenuList(pageable);
 
         log.info("조회한 내용 목록 : {}", menuList.getContent());
+//        System.out.println("menuList = " + menuList); 와 같다.
         log.info("총 페이지 수 : {}", menuList.getTotalPages());
         log.info("총 메뉴의 수 : {}", menuList.getTotalElements());
-        log.info("해당 페이지에 표시 될 요소의 수 : {}", menuList.getSize());
+        log.info("해당 페이지에 표시될 요소의 수 : {}",menuList.getSize());
         log.info("해당 페이지의 실제 요소 갯수 : {}", menuList.getNumberOfElements());
-        log.info("첫 페이지 여부 : {}", menuList.isFirst());
-        log.info("마지막 페이지 여부 : {}", menuList.isLast());
+        log.info("첫 페이지 여부: {}", menuList.isFirst());
+        log.info("마지막 페이지 여부: {}", menuList.isLast());
         log.info("정렬 방식 : {}", menuList.getSort());
-        log.info("여러 페이지 중 현재 인덱스 : {}", menuList.getNumber());
+        log.info("여러 페이지 중 현재 인덱스 : {}",menuList.getNumber());
 
         PagingButton paging = Pagenation.getPagingButtonInfo(menuList);
 
@@ -72,10 +73,10 @@ public class MenuController {
     }
 
     @GetMapping("/querymethod")
-    public void queryMethodPage() {}
+    public void queryMethodPage(){}
 
     @GetMapping("/search")
-    public String findByMenuPrice(@RequestParam Integer menuPrice, Model model) {
+    public String findByMenuPrice(@RequestParam int menuPrice, Model model) {
 
         List<MenuDTO> menuList = service.findByMenuPrice(menuPrice);
 
@@ -83,7 +84,6 @@ public class MenuController {
         model.addAttribute("menuPrice", menuPrice);
 
         return "menu/searchResult";
-
     }
 
     @GetMapping("/regist")
@@ -91,7 +91,7 @@ public class MenuController {
 
     @GetMapping(value = "/category", produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public List<CategoryDTO> findCategoryList() {
+    public List<CategoryDTO> findCategoryList(){
         return service.findAllCategory();
     }
 
@@ -102,28 +102,4 @@ public class MenuController {
 
         return "redirect:/menu/list";
     }
-
-    @GetMapping("/modify")
-    public void modifyPage() {}
-
-    @PostMapping("/modify")
-    public String modifyMenu(MenuDTO modifyMenu) {
-
-        service.modifyMenu(modifyMenu);
-
-        return "redirect:/menu/" + modifyMenu.getMenuCode();
-    }
-
-    @GetMapping("/delete")
-    public void deletePage() {}
-
-
-    @PostMapping("/delete")
-    public String deleteMenu(@RequestParam int menuCode) {
-
-        service.deleteMenu(menuCode);
-
-        return "redirect:/menu/list";
-    }
-
 }
