@@ -6,7 +6,6 @@ import com.ohgiraffers.springdatajpa.menu.model.dao.CategoryRepository;
 import com.ohgiraffers.springdatajpa.menu.model.dao.MenuRepository;
 import com.ohgiraffers.springdatajpa.menu.model.dto.CategoryDTO;
 import com.ohgiraffers.springdatajpa.menu.model.dto.MenuDTO;
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,7 +64,7 @@ public class MenuService {
     }
 
     /* Query 메소드를 사용해서 조회하기 */
-    public List<MenuDTO> findByMenuPrice(int menuPrice) {
+    public List<MenuDTO> findByMenuPrice(Integer menuPrice) {
 
 //        List<Menu> menuList = repository.findByMenuPriceGreaterThan(menuPrice);
 //        List<Menu> menuList = repository.findByMenuPriceGreaterThanOrderByMenuPrice(menuPrice);
@@ -74,21 +74,47 @@ public class MenuService {
                 .map(menu -> modelMapper.map(menu, MenuDTO.class))
                 .collect(Collectors.toList());
     }
-    /* @Query : JPQL Native Query */
+
+    /* 5. @Query : JPQL Native Query */
     public List<CategoryDTO> findAllCategory() {
 
         List<Category> categoryList = categoryRepository.findAllCategory();
+//        List<Category> categoryList = categoryRepository.findAll();
 
         return categoryList.stream()
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .collect(Collectors.toList());
     }
 
-    //save() 등록 관련 메소드
+    // save() 등록 관련 메소드
     @Transactional
     public void registNewMenu(MenuDTO menuDTO) {
 
         repository.save(modelMapper.map(menuDTO, Menu.class));
+
+    }
+
+    @Transactional
+    public void modifyMenu(MenuDTO modifyMenu) {
+
+        Menu foundMenu = repository.findById(modifyMenu.getMenuCode()).orElseThrow(IllegalArgumentException::new);
+
+        /* 1. setter 사용해서 수정해보기 - setter 사용은 지양한다. */
+//        foundMenu.setMenuName(modifyMenu.getMenuName());
+
+        /* 2. @Builder */
+//        foundMenu = foundMenu.toBuilder().menuName(modifyMenu.getMenuName()).build();
+//        repository.save(foundMenu);
+
+        /* 3. Entity 클래스 내부에서 builder 패턴을 사용해서 구현 */
+        foundMenu = foundMenu.menuName(modifyMenu.getMenuName()).builder();
+        repository.save(foundMenu);
+    }
+
+    @Transactional
+    public void deleteMenu(int menuCode) {
+
+        repository.deleteById(menuCode);
 
     }
 }

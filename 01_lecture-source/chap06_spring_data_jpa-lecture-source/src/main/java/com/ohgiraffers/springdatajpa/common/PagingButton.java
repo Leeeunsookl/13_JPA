@@ -1,7 +1,7 @@
 package com.ohgiraffers.springdatajpa.common;
 
 public class PagingButton {
-
+    //DTO처럼 생각하면 됨
     private int currentPage;
     private int startPage;
     private int endPage;

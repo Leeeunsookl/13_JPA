@@ -19,6 +19,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     List<Menu> findByMenuPriceGreaterThan(int menuPrice);
 
     List<Menu> findByMenuPriceGreaterThanOrderByMenuPrice(int menuPrice);
-
+    //Sort 정렬
     List<Menu> findByMenuPriceGreaterThan(int menuPrice, Sort menuPrice1);
-}
+
+    }

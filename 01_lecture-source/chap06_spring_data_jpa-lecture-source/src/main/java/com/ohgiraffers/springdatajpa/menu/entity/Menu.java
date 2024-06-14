@@ -1,9 +1,12 @@
 package com.ohgiraffers.springdatajpa.menu.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
 @Entity
-@Table(name="tbl_menu")
+@Table(name = "tbl_menu")
+/* 2. @Builder lombok 라이브러리에서 제공해주는 빌더 사용 */
+//@Builder(toBuilder = true)
 public class Menu {
 
     @Id
@@ -11,19 +14,45 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int menuCode;
 
-    @Column(name="menu_name")
+    @Column(name = "menu_name")
     private String menuName;
 
-    @Column(name="menu_price")
+    @Column(name = "menu_price")
     private int menuPrice;
 
-    @Column(name="category_code")
+    @Column(name = "category_code")
     private int categoryCode;
 
-    @Column(name="orderable_status")
+    @Column(name = "orderable_status")
     private String orderableStatus;
 
-    protected Menu(){}
+
+    /* 3. Entity 클래스 내부에서 builder 패턴 구현 */
+    public Menu menuName(String var) {
+        this.menuName = var;
+        return this;
+    }
+
+    public Menu menuPrice(int var) {
+        this.menuPrice = var;
+        return this;
+    }
+
+    public Menu categoryCode(int var) {
+        this.categoryCode = var;
+        return this;
+    }
+
+    public Menu orderableStatus(String var) {
+        this.orderableStatus = var;
+        return this;
+    }
+
+    public Menu builder() {
+        return new Menu(menuCode, menuName, menuPrice, categoryCode, orderableStatus);
+    }
+
+    protected Menu() {}
 
     public Menu(int menuCode, String menuName, int menuPrice, int categoryCode, String orderableStatus) {
         this.menuCode = menuCode;
@@ -63,4 +92,8 @@ public class Menu {
                 ", orderableStatus='" + orderableStatus + '\'' +
                 '}';
     }
+
+//    public void setMenuName(String menuName) {
+//        this.menuName = menuName;
+//    }
 }
